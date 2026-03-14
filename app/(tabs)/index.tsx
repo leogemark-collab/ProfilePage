@@ -1,98 +1,240 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+type Course = {
+  title: string;
+  description: string;
+};
+
+const courses: Course[] = [
+  {
+    title: 'React Native Development',
+    description: 'Build mobile apps with Expo, navigation, and reusable components.',
+  },
+  {
+    title: 'Data Science Fundamentals',
+    description: 'Introduction to data analysis, visualization, and basic ML.',
+  },
+  {
+    title: 'Backend Development with Node.js',
+    description: 'Learn to build scalable backend services with Node.js and Express.',
+  },
+];
+
+const interests = ['Mobile Apps', 'UI/UX Design', 'Backend Development', 'Data Visualization'];
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {children}
+    </View>
+  );
+}
+
+function CourseCard({ title, description }: Course) {
+  return (
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>{title}</Text>
+      <Text style={styles.cardBody}>{description}</Text>
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <Image
+            source={require('@/assets/images/profile-placeholder.png')}
+            style={styles.avatar}
+          />
+          <Text style={styles.name}>Leo Gemark N. Llorando</Text>
+          <Text style={styles.subtitle}>Software Engineer • Bansalan, Davao Del Sur, PH</Text>
+          <View style={styles.badgeRow}>
+            <Text style={[styles.badge, styles.badgePrimary]}>Open to internships</Text>
+            <Text style={styles.badge}>Backend Developer, UI/UX Designer</Text>
+          </View>
+        </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <Section title="About">
+          <Text style={styles.paragraph}>
+            Passionate about creating technology that improves daily life, especially in my community. I enjoy building mobile apps, exploring data science, and learning about backend development. Always eager to collaborate on projects that make a positive impact.
+          </Text>
+        </Section>
+
+        <View style={styles.callout}>
+          <Text style={styles.calloutLabel}>Currently building</Text>
+          <Text style={styles.calloutText}>A community-based Lost & Found app for campus.</Text>
+        </View>
+
+        <Section title="Interests">
+          <View style={styles.chipRow}>
+            {interests.map((item) => (
+              <View key={item} style={styles.chip}>
+                <Text style={styles.chipText}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        </Section>
+
+        <Section title="Courses">
+          {courses.map((course) => (
+            <CourseCard
+              key={course.title}
+              title={course.title}
+              description={course.description}
+            />
+          ))}
+        </Section>
+
+        <Text style={styles.footer}>
+          Portfolio: leogemark-collab.github.io • Email: leogemark@example.com
+        </Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F6F6F8',
   },
-  stepContainer: {
-    gap: 8,
+  container: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: '#E3E4E8',
+    marginBottom: 12,
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111111',
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  badge: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    color: '#374151',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    fontSize: 12,
+    marginRight: 8,
+    overflow: 'hidden',
+  },
+  badgePrimary: {
+    borderColor: '#93C5FD',
+    color: '#1D4ED8',
+    backgroundColor: '#EFF6FF',
+  },
+  section: {
+    marginTop: 18,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  paragraph: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: '#4B5563',
+  },
+  callout: {
+    marginTop: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    padding: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#60A5FA',
+  },
+  calloutLabel: {
+    fontSize: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    color: '#6B7280',
+    marginBottom: 4,
+    fontWeight: '600',
+  },
+  calloutText: {
+    fontSize: 14,
+    color: '#111827',
+    lineHeight: 20,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  chipText: {
+    fontSize: 12,
+    color: '#374151',
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    padding: 12,
+    marginBottom: 12,
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  cardBody: {
+    fontSize: 12,
+    color: '#4B5563',
+    lineHeight: 18,
+  },
+  footer: {
+    textAlign: 'center',
+    marginTop: 16,
+    fontSize: 12,
+    color: '#9CA3AF',
   },
 });
